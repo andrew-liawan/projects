@@ -1,0 +1,526 @@
+---
+title: "Project Sim"
+author: "Andrew Liawan"
+date: "05/04/2024"
+output: word_document
+---
+
+# Creating a Function That Simulates Discrete Markov Chain of r Component Parameters with m Possible States Observed over t time periods/iterations
+
+```{r}
+# simulate discrete Markov chains according to transition matrix P
+run.mc.sim <- function( P, num.iters,num.states) {
+  
+  # number of possible states
+  num.states <- nrow(P)
+  
+  # stores the states X_t through time
+  states     <- numeric(num.iters)
+
+  # initialize variable for first state 
+  states[1]    <- sample(seq(1,num.states,1),1)
+
+  for(t in 2:num.iters) {
+    
+    # probability vector to simulate next state X_{t+1}
+    p  <- P[states[t-1],]
+    
+    ## draw from multinomial and determine state
+    states[t] <-  which(rmultinom(1, 1, p) == 1)
+  }
+  return(states)
+}
+```
+
+# Simulation of Component Data
+
+Component Parameters (r) = 1, 2, 3, ... , 499, 750
+
+Time periods (t) = 1, 2, 3, ... , 99, 100
+
+States (m) = 1, 2, 3, 4
+
+## Stationary Process from beginning to end
+
+```{r}
+set.seed(403-560)
+
+# P matrix of pij transition probabilities to simulate chains
+num.states = 4
+P <- t(matrix(c(0.35,0.55,0.06,0.04,
+                0.20,0.30,0.40,0.10,
+                0.50,0.30,0.20,0.00,
+                0.00,0.00,0.70,0.30),nrow=num.states,ncol=num.states))
+
+# Number of Electronic Components (r)
+num.comp = 750
+
+# Number of Iterations/Time periods (t)
+time = 101 ## t+1 to take account of initial state of component
+
+# Simulating r Markov Processes
+chain <- matrix(NA,ncol=num.comp,nrow=time)
+for (c in seq_len(num.comp)){
+  chain[,c] <- run.mc.sim(P,time,num.states)
+}
+
+# Markov Chain of the First Component
+chain[,1]
+
+# Number of Observations of each transition (nij)
+N <- list()
+for (t in 1:(time-1)){
+  N[[t]] <- paste(chain[t,],chain[t+1,],sep="")
+}
+n <- list("n11"=NULL,"n12"=NULL,"n13"=NULL,"n14"=NULL,
+          "n21"=NULL,"n22"=NULL,"n23"=NULL,"n24"=NULL,
+          "n31"=NULL,"n32"=NULL,"n33"=NULL,"n34"=NULL,
+          "n41"=NULL,"n42"=NULL,"n43"=NULL,"n44"=NULL)
+for (i in 1:(time-1)){
+  n$n11[i] <- length(N[[i]][N[[i]]=="11"])
+  n$n12[i] <- length(N[[i]][N[[i]]=="12"])
+  n$n13[i] <- length(N[[i]][N[[i]]=="13"])
+  n$n14[i] <- length(N[[i]][N[[i]]=="14"])
+  n$n21[i] <- length(N[[i]][N[[i]]=="21"])
+  n$n22[i] <- length(N[[i]][N[[i]]=="22"])
+  n$n23[i] <- length(N[[i]][N[[i]]=="23"])
+  n$n24[i] <- length(N[[i]][N[[i]]=="24"])
+  n$n31[i] <- length(N[[i]][N[[i]]=="31"])
+  n$n32[i] <- length(N[[i]][N[[i]]=="32"])
+  n$n33[i] <- length(N[[i]][N[[i]]=="33"])
+  n$n34[i] <- length(N[[i]][N[[i]]=="34"])
+  n$n41[i] <- length(N[[i]][N[[i]]=="41"])
+  n$n42[i] <- length(N[[i]][N[[i]]=="42"])
+  n$n43[i] <- length(N[[i]][N[[i]]=="43"])
+  n$n44[i] <- length(N[[i]][N[[i]]=="44"])
+}
+
+n$n11
+
+# Estimates of Transition Probabilities (MLE)
+
+## Under Ho : Stationary
+phat_ij <- NULL
+for (i in 1:16){
+ phat_ij[i] <- sum(n[[i]])/length(chain[1:(time-1),][chain[1:(time-1),]==ceiling(i/4)])
+}
+
+round(phat_ij,3)
+
+## Under Ha : Not Stationary
+phat_ijt <- list("phat11"=NULL,"phat12"=NULL,"phat13"=NULL,"phat14"=NULL,
+          "phat21"=NULL,"phat22"=NULL,"phat23"=NULL,"phat24"=NULL,
+          "phat31"=NULL,"phat32"=NULL,"phat33"=NULL,"phat34"=NULL,
+          "phat41"=NULL,"phat42"=NULL,"phat43"=NULL,"phat44"=NULL) 
+for (t in 1:(time-1)){
+  phat_ijt$phat11[t] <- n[[1]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat12[t] <- n[[2]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat13[t] <- n[[3]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat14[t] <- n[[4]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat21[t] <- n[[5]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat22[t] <- n[[6]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat23[t] <- n[[7]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat24[t] <- n[[8]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat31[t] <- n[[9]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat32[t] <- n[[10]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat33[t] <- n[[11]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat34[t] <- n[[12]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat41[t] <- n[[13]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat42[t] <- n[[14]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat43[t] <- n[[15]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat44[t] <- n[[16]][t]/length(chain[t,][chain[t,]==4])
+}
+
+round(phat_ijt$phat11,3)
+
+# Likelihood Ratio
+L <- prod(c((phat_ij[1]/phat_ijt$phat11)^n$n11,
+       (phat_ij[2]/phat_ijt$phat12)^n$n12,
+       (phat_ij[3]/phat_ijt$phat13)^n$n13,
+       (phat_ij[4]/phat_ijt$phat14)^n$n14,
+       (phat_ij[5]/phat_ijt$phat21)^n$n21,
+       (phat_ij[6]/phat_ijt$phat22)^n$n22,
+       (phat_ij[7]/phat_ijt$phat23)^n$n23,
+       (phat_ij[8]/phat_ijt$phat24)^n$n24,
+       (phat_ij[9]/phat_ijt$phat31)^n$n31,
+       (phat_ij[10]/phat_ijt$phat32)^n$n32,
+       (phat_ij[11]/phat_ijt$phat33)^n$n33,
+       (phat_ij[12]/phat_ijt$phat34)^n$n34,
+       (phat_ij[13]/phat_ijt$phat41)^n$n41,
+       (phat_ij[14]/phat_ijt$phat42)^n$n42,
+       (phat_ij[15]/phat_ijt$phat43)^n$n43,
+       (phat_ij[16]/phat_ijt$phat44)^n$n44))
+
+#Chi-Squared Test
+chisq <- -2*log(L)
+df <- (time-2)*num.states*(num.states-1)
+chisq
+qchisq(0.05,df,lower.tail=F)
+```
+
+## Stationary process from beginning to t = 90, then random samling of states from t = 91 to end
+
+```{r}
+set.seed(403-560)
+
+# P matrix of pij transition probabilities to simulate chains
+num.states = 4
+P <- t(matrix(c(0.35,0.55,0.06,0.04,
+                0.20,0.30,0.40,0.10,
+                0.50,0.30,0.20,0.00,
+                0.00,0.00,0.70,0.30),nrow=num.states,ncol=num.states))
+
+# Number of Electronic Components (r)
+num.comp = 750
+
+# Number of Iterations/Time periods (t)
+time = 101 ## t+1 to take account of initial state of component
+time_change = 91
+
+# Simulating r Markov Processes
+chain <- matrix(NA,ncol=num.comp,nrow=time)
+for (c in seq_len(num.comp)){
+  chain[,c] <- c(run.mc.sim(P,time_change,num.states),
+                 sample(1:4,time-time_change,replace = T))
+}
+
+# Markov Chain of the First Component
+chain[,1]
+
+# Number of Observations of each transition (nij)
+N <- list()
+for (t in 1:(time-1)){
+  N[[t]] <- paste(chain[t,],chain[t+1,],sep="")
+}
+n <- list("n11"=NULL,"n12"=NULL,"n13"=NULL,"n14"=NULL,
+          "n21"=NULL,"n22"=NULL,"n23"=NULL,"n24"=NULL,
+          "n31"=NULL,"n32"=NULL,"n33"=NULL,"n34"=NULL,
+          "n41"=NULL,"n42"=NULL,"n43"=NULL,"n44"=NULL)
+for (i in 1:(time-1)){
+  n$n11[i] <- length(N[[i]][N[[i]]=="11"])
+  n$n12[i] <- length(N[[i]][N[[i]]=="12"])
+  n$n13[i] <- length(N[[i]][N[[i]]=="13"])
+  n$n14[i] <- length(N[[i]][N[[i]]=="14"])
+  n$n21[i] <- length(N[[i]][N[[i]]=="21"])
+  n$n22[i] <- length(N[[i]][N[[i]]=="22"])
+  n$n23[i] <- length(N[[i]][N[[i]]=="23"])
+  n$n24[i] <- length(N[[i]][N[[i]]=="24"])
+  n$n31[i] <- length(N[[i]][N[[i]]=="31"])
+  n$n32[i] <- length(N[[i]][N[[i]]=="32"])
+  n$n33[i] <- length(N[[i]][N[[i]]=="33"])
+  n$n34[i] <- length(N[[i]][N[[i]]=="34"])
+  n$n41[i] <- length(N[[i]][N[[i]]=="41"])
+  n$n42[i] <- length(N[[i]][N[[i]]=="42"])
+  n$n43[i] <- length(N[[i]][N[[i]]=="43"])
+  n$n44[i] <- length(N[[i]][N[[i]]=="44"])
+}
+
+n$n11
+
+# Estimates of Transition Probabilities (MLE)
+
+## Under Ho : Stationary
+phat_ij <- NULL
+for (i in 1:16){
+ phat_ij[i] <- sum(n[[i]])/length(chain[1:(time-1),][chain[1:(time-1),]==ceiling(i/4)])
+}
+
+round(phat_ij,3)
+
+## Under Ha : Not Stationary
+phat_ijt <- list("phat11"=NULL,"phat12"=NULL,"phat13"=NULL,"phat14"=NULL,
+          "phat21"=NULL,"phat22"=NULL,"phat23"=NULL,"phat24"=NULL,
+          "phat31"=NULL,"phat32"=NULL,"phat33"=NULL,"phat34"=NULL,
+          "phat41"=NULL,"phat42"=NULL,"phat43"=NULL,"phat44"=NULL) 
+for (t in 1:(time-1)){
+  phat_ijt$phat11[t] <- n[[1]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat12[t] <- n[[2]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat13[t] <- n[[3]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat14[t] <- n[[4]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat21[t] <- n[[5]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat22[t] <- n[[6]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat23[t] <- n[[7]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat24[t] <- n[[8]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat31[t] <- n[[9]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat32[t] <- n[[10]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat33[t] <- n[[11]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat34[t] <- n[[12]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat41[t] <- n[[13]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat42[t] <- n[[14]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat43[t] <- n[[15]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat44[t] <- n[[16]][t]/length(chain[t,][chain[t,]==4])
+}
+
+round(phat_ijt$phat11,3)
+
+# Likelihood Ratio
+L <- prod(c((phat_ij[1]/phat_ijt$phat11)^n$n11,
+       (phat_ij[2]/phat_ijt$phat12)^n$n12,
+       (phat_ij[3]/phat_ijt$phat13)^n$n13,
+       (phat_ij[4]/phat_ijt$phat14)^n$n14,
+       (phat_ij[5]/phat_ijt$phat21)^n$n21,
+       (phat_ij[6]/phat_ijt$phat22)^n$n22,
+       (phat_ij[7]/phat_ijt$phat23)^n$n23,
+       (phat_ij[8]/phat_ijt$phat24)^n$n24,
+       (phat_ij[9]/phat_ijt$phat31)^n$n31,
+       (phat_ij[10]/phat_ijt$phat32)^n$n32,
+       (phat_ij[11]/phat_ijt$phat33)^n$n33,
+       (phat_ij[12]/phat_ijt$phat34)^n$n34,
+       (phat_ij[13]/phat_ijt$phat41)^n$n41,
+       (phat_ij[14]/phat_ijt$phat42)^n$n42,
+       (phat_ij[15]/phat_ijt$phat43)^n$n43,
+       (phat_ij[16]/phat_ijt$phat44)^n$n44))
+
+#Chi-Squared Test
+chisq <- -2*log(L)
+df <- (time-2)*num.states*(num.states-1)
+chisq
+qchisq(0.05,df,lower.tail=F)
+```
+## Stationary process of P1 Transition Matrix from beginning to t = 90, then stationary process of P2 Transition Matrix from t = 91 to end
+
+```{r}
+set.seed(403-560)
+
+# P matrix of pij transition probabilities to simulate chains
+num.states = 4
+P1 <- t(matrix(c(0.35,0.55,0.06,0.04,
+                0.20,0.30,0.40,0.10,
+                0.50,0.30,0.20,0.00,
+                0.00,0.00,0.70,0.30),nrow=num.states,ncol=num.states))
+P2 <- t(matrix(c(0.34,0.56,0.05,0.05,
+                0.21,0.29,0.39,0.11,
+                0.49,0.31,0.19,0.01,
+                0.01,0.01,0.69,0.29),nrow=num.states,ncol=num.states))
+
+# Number of Electronic Components (r)
+num.comp = 750
+
+# Number of Iterations/Time periods (t)
+time = 101 ## t+1 to take account of initial state of component
+time_change = 91
+
+# Simulating r Markov Processes
+chain <- matrix(NA,ncol=num.comp,nrow=time)
+for (c in seq_len(num.comp)){
+  chain[,c] <- c(run.mc.sim(P1,time_change,num.states),
+                 run.mc.sim(P2,time-time_change,num.states))
+}
+
+# Markov Chain of the First Component
+chain[,1]
+
+# Number of Observations of each transition (nij)
+N <- list()
+for (t in 1:(time-1)){
+  N[[t]] <- paste(chain[t,],chain[t+1,],sep="")
+}
+n <- list("n11"=NULL,"n12"=NULL,"n13"=NULL,"n14"=NULL,
+          "n21"=NULL,"n22"=NULL,"n23"=NULL,"n24"=NULL,
+          "n31"=NULL,"n32"=NULL,"n33"=NULL,"n34"=NULL,
+          "n41"=NULL,"n42"=NULL,"n43"=NULL,"n44"=NULL)
+for (i in 1:(time-1)){
+  n$n11[i] <- length(N[[i]][N[[i]]=="11"])
+  n$n12[i] <- length(N[[i]][N[[i]]=="12"])
+  n$n13[i] <- length(N[[i]][N[[i]]=="13"])
+  n$n14[i] <- length(N[[i]][N[[i]]=="14"])
+  n$n21[i] <- length(N[[i]][N[[i]]=="21"])
+  n$n22[i] <- length(N[[i]][N[[i]]=="22"])
+  n$n23[i] <- length(N[[i]][N[[i]]=="23"])
+  n$n24[i] <- length(N[[i]][N[[i]]=="24"])
+  n$n31[i] <- length(N[[i]][N[[i]]=="31"])
+  n$n32[i] <- length(N[[i]][N[[i]]=="32"])
+  n$n33[i] <- length(N[[i]][N[[i]]=="33"])
+  n$n34[i] <- length(N[[i]][N[[i]]=="34"])
+  n$n41[i] <- length(N[[i]][N[[i]]=="41"])
+  n$n42[i] <- length(N[[i]][N[[i]]=="42"])
+  n$n43[i] <- length(N[[i]][N[[i]]=="43"])
+  n$n44[i] <- length(N[[i]][N[[i]]=="44"])
+}
+
+n$n11
+
+# Estimates of Transition Probabilities (MLE)
+
+## Under Ho : Stationary
+phat_ij <- NULL
+for (i in 1:16){
+ phat_ij[i] <- sum(n[[i]])/length(chain[1:(time-1),][chain[1:(time-1),]==ceiling(i/4)])
+}
+
+round(phat_ij,3)
+
+## Under Ha : Not Stationary
+phat_ijt <- list("phat11"=NULL,"phat12"=NULL,"phat13"=NULL,"phat14"=NULL,
+          "phat21"=NULL,"phat22"=NULL,"phat23"=NULL,"phat24"=NULL,
+          "phat31"=NULL,"phat32"=NULL,"phat33"=NULL,"phat34"=NULL,
+          "phat41"=NULL,"phat42"=NULL,"phat43"=NULL,"phat44"=NULL) 
+for (t in 1:(time-1)){
+  phat_ijt$phat11[t] <- n[[1]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat12[t] <- n[[2]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat13[t] <- n[[3]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat14[t] <- n[[4]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat21[t] <- n[[5]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat22[t] <- n[[6]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat23[t] <- n[[7]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat24[t] <- n[[8]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat31[t] <- n[[9]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat32[t] <- n[[10]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat33[t] <- n[[11]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat34[t] <- n[[12]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat41[t] <- n[[13]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat42[t] <- n[[14]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat43[t] <- n[[15]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat44[t] <- n[[16]][t]/length(chain[t,][chain[t,]==4])
+}
+
+round(phat_ijt$phat11,3)
+
+# Likelihood Ratio
+L <- prod(c((phat_ij[1]/phat_ijt$phat11)^n$n11,
+       (phat_ij[2]/phat_ijt$phat12)^n$n12,
+       (phat_ij[3]/phat_ijt$phat13)^n$n13,
+       (phat_ij[4]/phat_ijt$phat14)^n$n14,
+       (phat_ij[5]/phat_ijt$phat21)^n$n21,
+       (phat_ij[6]/phat_ijt$phat22)^n$n22,
+       (phat_ij[7]/phat_ijt$phat23)^n$n23,
+       (phat_ij[8]/phat_ijt$phat24)^n$n24,
+       (phat_ij[9]/phat_ijt$phat31)^n$n31,
+       (phat_ij[10]/phat_ijt$phat32)^n$n32,
+       (phat_ij[11]/phat_ijt$phat33)^n$n33,
+       (phat_ij[12]/phat_ijt$phat34)^n$n34,
+       (phat_ij[13]/phat_ijt$phat41)^n$n41,
+       (phat_ij[14]/phat_ijt$phat42)^n$n42,
+       (phat_ij[15]/phat_ijt$phat43)^n$n43,
+       (phat_ij[16]/phat_ijt$phat44)^n$n44))
+
+#Chi-Squared Test
+chisq <- -2*log(L)
+df <- (time-2)*num.states*(num.states-1)
+chisq
+qchisq(0.05,df,lower.tail=F)
+```
+
+## Stationary process of P1 Transition Matrix from beginning to t = 90, then stationary process of P2 Transition Matrix from t = 91 to end (r = 150)
+
+```{r}
+set.seed(403-560)
+
+# P matrix of pij transition probabilities to simulate chains
+num.states = 4
+P1 <- t(matrix(c(0.35,0.55,0.06,0.04,
+                0.20,0.30,0.40,0.10,
+                0.50,0.30,0.20,0.00,
+                0.00,0.00,0.70,0.30),nrow=num.states,ncol=num.states))
+P2 <- t(matrix(c(0.34,0.56,0.05,0.05,
+                0.21,0.29,0.39,0.11,
+                0.49,0.31,0.19,0.01,
+                0.01,0.01,0.69,0.29),nrow=num.states,ncol=num.states))
+
+# Number of Electronic Components (r)
+num.comp = 150
+
+# Number of Iterations/Time periods (t)
+time = 101 ## t+1 to take account of initial state of component
+time_change = 91
+
+# Simulating r Markov Processes
+chain <- matrix(NA,ncol=num.comp,nrow=time)
+for (c in seq_len(num.comp)){
+  chain[,c] <- c(run.mc.sim(P1,time_change,num.states),
+                 run.mc.sim(P2,time-time_change,num.states))
+}
+
+# Markov Chain of the First Component
+chain[,1]
+
+# Number of Observations of each transition (nij)
+N <- list()
+for (t in 1:(time-1)){
+  N[[t]] <- paste(chain[t,],chain[t+1,],sep="")
+}
+n <- list("n11"=NULL,"n12"=NULL,"n13"=NULL,"n14"=NULL,
+          "n21"=NULL,"n22"=NULL,"n23"=NULL,"n24"=NULL,
+          "n31"=NULL,"n32"=NULL,"n33"=NULL,"n34"=NULL,
+          "n41"=NULL,"n42"=NULL,"n43"=NULL,"n44"=NULL)
+for (i in 1:(time-1)){
+  n$n11[i] <- length(N[[i]][N[[i]]=="11"])
+  n$n12[i] <- length(N[[i]][N[[i]]=="12"])
+  n$n13[i] <- length(N[[i]][N[[i]]=="13"])
+  n$n14[i] <- length(N[[i]][N[[i]]=="14"])
+  n$n21[i] <- length(N[[i]][N[[i]]=="21"])
+  n$n22[i] <- length(N[[i]][N[[i]]=="22"])
+  n$n23[i] <- length(N[[i]][N[[i]]=="23"])
+  n$n24[i] <- length(N[[i]][N[[i]]=="24"])
+  n$n31[i] <- length(N[[i]][N[[i]]=="31"])
+  n$n32[i] <- length(N[[i]][N[[i]]=="32"])
+  n$n33[i] <- length(N[[i]][N[[i]]=="33"])
+  n$n34[i] <- length(N[[i]][N[[i]]=="34"])
+  n$n41[i] <- length(N[[i]][N[[i]]=="41"])
+  n$n42[i] <- length(N[[i]][N[[i]]=="42"])
+  n$n43[i] <- length(N[[i]][N[[i]]=="43"])
+  n$n44[i] <- length(N[[i]][N[[i]]=="44"])
+}
+
+n$n11
+
+# Estimates of Transition Probabilities (MLE)
+
+## Under Ho : Stationary
+phat_ij <- NULL
+for (i in 1:16){
+ phat_ij[i] <- sum(n[[i]])/length(chain[1:(time-1),][chain[1:(time-1),]==ceiling(i/4)])
+}
+
+round(phat_ij,3)
+
+## Under Ha : Not Stationary
+phat_ijt <- list("phat11"=NULL,"phat12"=NULL,"phat13"=NULL,"phat14"=NULL,
+          "phat21"=NULL,"phat22"=NULL,"phat23"=NULL,"phat24"=NULL,
+          "phat31"=NULL,"phat32"=NULL,"phat33"=NULL,"phat34"=NULL,
+          "phat41"=NULL,"phat42"=NULL,"phat43"=NULL,"phat44"=NULL) 
+for (t in 1:(time-1)){
+  phat_ijt$phat11[t] <- n[[1]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat12[t] <- n[[2]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat13[t] <- n[[3]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat14[t] <- n[[4]][t]/length(chain[t,][chain[t,]==1])
+  phat_ijt$phat21[t] <- n[[5]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat22[t] <- n[[6]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat23[t] <- n[[7]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat24[t] <- n[[8]][t]/length(chain[t,][chain[t,]==2])
+  phat_ijt$phat31[t] <- n[[9]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat32[t] <- n[[10]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat33[t] <- n[[11]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat34[t] <- n[[12]][t]/length(chain[t,][chain[t,]==3])
+  phat_ijt$phat41[t] <- n[[13]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat42[t] <- n[[14]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat43[t] <- n[[15]][t]/length(chain[t,][chain[t,]==4])
+  phat_ijt$phat44[t] <- n[[16]][t]/length(chain[t,][chain[t,]==4])
+}
+
+round(phat_ijt$phat11,3)
+
+# Likelihood Ratio
+L <- prod(c((phat_ij[1]/phat_ijt$phat11)^n$n11,
+       (phat_ij[2]/phat_ijt$phat12)^n$n12,
+       (phat_ij[3]/phat_ijt$phat13)^n$n13,
+       (phat_ij[4]/phat_ijt$phat14)^n$n14,
+       (phat_ij[5]/phat_ijt$phat21)^n$n21,
+       (phat_ij[6]/phat_ijt$phat22)^n$n22,
+       (phat_ij[7]/phat_ijt$phat23)^n$n23,
+       (phat_ij[8]/phat_ijt$phat24)^n$n24,
+       (phat_ij[9]/phat_ijt$phat31)^n$n31,
+       (phat_ij[10]/phat_ijt$phat32)^n$n32,
+       (phat_ij[11]/phat_ijt$phat33)^n$n33,
+       (phat_ij[12]/phat_ijt$phat34)^n$n34,
+       (phat_ij[13]/phat_ijt$phat41)^n$n41,
+       (phat_ij[14]/phat_ijt$phat42)^n$n42,
+       (phat_ij[15]/phat_ijt$phat43)^n$n43,
+       (phat_ij[16]/phat_ijt$phat44)^n$n44))
+
+#Chi-Squared Test
+chisq <- -2*log(L)
+df <- (time-2)*num.states*(num.states-1)
+chisq
+qchisq(0.05,df,lower.tail=F)
+```
