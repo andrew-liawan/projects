@@ -8,6 +8,16 @@ This project contains the 2 following excel spreadsheets.
 
 This Microsoft Excel file contains the top 100 songs of every week in the year 2024. In a technical standpoint, this file demonstrates my skills in Excel in SPSS calculations such as VLOOKUP and IF functions and conditional rules on cell colors. The spreadsheet is also built in a way that its format can be adapted to external power querying into other excel spreadsheets or Power BI environments.
 
+Visible Columns:
+- No. : Weekly position of the song that particular week
+    - NEW : First/Debut entry of a new song that particular week
+    - RE : Song re-entered the Top 100 after completely exiting the charts
+- LW : Movement of position of the song compared to last week (ex. +3 means the song jumped 3 positions from last week)
+- Song : Title of the song
+- Artist: Artist(s) of the song
+- Peak : The peak position of the song
+- WO : The number of weeks that the song charted
+
 ## Year Points.xlsx
 
 This Microsoft Excel file takes data from the Top 100 Chart.xlsx spreadsheet, assign points to each song every week based on how well they perform in the weekly charts, and add the points up throughout the year, creating a table of the overall popularity of the songs in 2024 based on the assigned points. This file demonstrates my ability to extract data from another spreadsheet and incorporating a reference table to create a new database from another database, all using Excel’s built-in Power Query
