@@ -1,5 +1,7 @@
 # PROJECTS
 
+These are data-related formal studies projects and passion/hobby-related projects. 
+
 ## 90s Artists
 
 ### Description
