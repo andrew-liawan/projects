@@ -31,11 +31,15 @@ style="position: relative">
 
 ### Description
 
+This folder contains R-Code and PDF of one of my statistics projects in school. It is a theoretical dive on hypothesis testing test statistic and methodologies on multiple Markov chains. They contain data simulations and analysis on why a certain way of hypothesis testing works in this particular case of Markov chains.
+
+R-Code is in the form of a HTML, and PDF is in a form of a short scientific journal.
+
 ### Links to Reports
 
-[PDF](Markov%20Chain/STAT%20403%20Project%20-%20Andrew%20Liawan.pdf)
+[Journal Report PDF](Markov%20Chain/STAT%20403%20Project%20-%20Andrew%20Liawan.pdf)
 
-[R Code](Markov%20Chain/STAT-403-Project.html)
+[R Code (HTML)](Markov%20Chain/STAT-403-Project.html)
 
 ## Top 100 Charts
 
@@ -63,7 +67,7 @@ Visible Columns:
 
 This Microsoft Excel file takes data from the Top 100 Chart.xlsx spreadsheet, assign points to each song every week based on how well they perform in the weekly charts, and add the points up throughout the year, creating a table of the overall popularity of the songs in 2024 based on the assigned points. This file demonstrates my ability to extract data from another spreadsheet and incorporating a reference table to create a new database from another database, all using Excel’s built-in Power Query
 
-### Links to Sheets
+### Download Excel Sheets
 
 [Top 100 Chart](Top%20100%20Chart/Top%20100%20Chart.xlsx)
 
