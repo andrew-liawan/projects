@@ -1,20 +1,12 @@
----
-layout: default
----
+# 90s Artists
 
 [Link](https://public.tableau.com/views/Recognitionof90sartists/Recognizabilityof90sArtistsin2020byMillenialsandGen-Zs-AndrewLiawan?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
 
-Text can be **bold**, _italic_, or ~~strikethrough~~.
-
-There should be whitespace between paragraphs.
-
-There should be whitespace between paragraphs. We recommend including a README, or a file with information about your project.
-
-# Header 1
+# Markov Chains
 
 This is a normal paragraph following a header. GitHub is a code hosting platform for version control and collaboration. It lets you and others work together on projects from anywhere.
 
-## Header 2
+# Top 100 Charts
 
 > This is a blockquote following a header.
 >
