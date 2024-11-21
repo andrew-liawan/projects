@@ -1,9 +1,8 @@
-Untitled
-================
-Andrew Liawan
-21/11/2024
+# 90s Artists
 
-Text can be **bold**, *italic*, or ~~strikethrough~~.
+## Description
+
+## Dashboard
 
 <div id="viz1732225136556" class="tableauPlaceholder"
 style="position: relative">
@@ -24,18 +23,11 @@ style="position: relative">
                     var divElement = document.getElementById('viz1732225136556');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1527px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);
 </script>
 
-There should be whitespace between paragraphs.
+# Markov Chains
 
-There should be whitespace between paragraphs. We recommend including a
-README, or a file with information about your project.
+[Link](Markov%20Chain/STAT%20403%20Project%20-%20Andrew%20Liawan.pdf)
 
-# Header 1
-
-This is a normal paragraph following a header. GitHub is a code hosting
-platform for version control and collaboration. It lets you and others
-work together on projects from anywhere.
-
-## Header 2
+# Top 100 Charts
 
 > This is a blockquote following a header.
 >
