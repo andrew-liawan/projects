@@ -33,7 +33,7 @@ style="position: relative">
 
 [PDF](Markov%20Chain/STAT%20403%20Project%20-%20Andrew%20Liawan.pdf)
 
-[Markdown](Markov%20Chain/STAT-403-Project.md)
+[R Code](Markov%20Chain/STAT-403-Project.html)
 
 ## Top 100 Charts
 
