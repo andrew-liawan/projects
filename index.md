@@ -1,8 +1,10 @@
-# 90s Artists
+# PROJECTS
 
-## Description
+## 90s Artists
 
-## Dashboard
+### Description
+
+### Dashboard
 
 <div id="viz1732225136556" class="tableauPlaceholder"
 style="position: relative">
@@ -23,17 +25,21 @@ style="position: relative">
                     var divElement = document.getElementById('viz1732225136556');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='100%';vizElement.style.height=(divElement.offsetWidth*0.75)+'px';} else { vizElement.style.width='100%';vizElement.style.height='1527px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);
 </script>
 
-# Markov Chains
+## Markov Chains
 
-## Description
+### Description
 
-## Links to Reports
+### Links to Reports
 
 [PDF](Markov%20Chain/STAT%20403%20Project%20-%20Andrew%20Liawan.pdf)
 
 [Markdown](Markov%20Chain/STAT-403-Project.md)
 
-# Top 100 Charts
+## Top 100 Charts
+
+### Description
+
+### Links to Sheets
 
 [Top 100 Chart](Top%20100%20Chart/Top%20100%20Chart.xlsx)
 
