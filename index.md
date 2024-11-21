@@ -2,6 +2,8 @@
 layout: default
 ---
 
+[Link](https://public.tableau.com/views/Recognitionof90sartists/Recognizabilityof90sArtistsin2020byMillenialsandGen-Zs-AndrewLiawan?:language=en-US&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link)
+
 Text can be **bold**, _italic_, or ~~strikethrough~~.
 
 There should be whitespace between paragraphs.
