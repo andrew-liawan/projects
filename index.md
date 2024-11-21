@@ -4,7 +4,7 @@ layout: default
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.
 
-[Link to another page](./another-page.html).
+[Link to another page](https://prod-ca-a.online.tableau.com/t/undercouvve-7f39767fbc/views/tableau_1/Recognizabilityof90sArtistsin2020byMillenialsandGen-Zs-AndrewLiawan).
 
 There should be whitespace between paragraphs.
 
