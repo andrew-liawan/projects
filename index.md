@@ -4,7 +4,8 @@ layout: default
 
 Text can be **bold**, _italic_, or ~~strikethrough~~.
 
-[Link to another page](https://prod-ca-a.online.tableau.com/t/undercouvve-7f39767fbc/views/tableau_1/Recognizabilityof90sArtistsin2020byMillenialsandGen-Zs-AndrewLiawan).
+<iframe src="https://public.tableau.com/views/Recognitionof90sartists/Recognizabilityof90sArtistsin2020byMillenialsandGen-Zs-AndrewLiawan?:language=en-US&publish=yes&:sid=&:redirect=auth&:display_count=n&:origin=viz_share_link"
+ width="645" height="955"></iframe>
 
 There should be whitespace between paragraphs.
 
