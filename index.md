@@ -6,6 +6,8 @@ These are data-related formal studies projects and passion/hobby-related project
 
 ### Description
 
+This dashboard shows how songs by music artists in the 1990s holds up in 2020. Recognizability scores ranging from 0-1 are assigned to each song, based on a survey done. The scores are assigned based on if people recognize the tune, the title, and/or the artists from an audio clip of the songs. "Age When song was released" is the age of the person on the survey when the particular song was released. 0 also encapsulates all who were not born yet when a song was released.
+
 ### Dashboard
 
 <div id="viz1732225136556" class="tableauPlaceholder"
@@ -33,7 +35,7 @@ style="position: relative">
 
 ### Description
 
-This folder contains R-Code and PDF of one of my statistics projects in school. It is a theoretical dive on hypothesis testing test statistic and methodologies on multiple Markov chains. They contain data simulations and analysis on why a certain way of hypothesis testing works in this particular case of Markov chains.
+This is a theoretical dive on hypothesis testing test statistic and methodologies on multiple Markov chains. They contain data simulations and analysis on why a certain way of hypothesis testing works in this particular case of Markov chains.
 
 R-Code is in the form of a HTML, and PDF is in a form of a short scientific journal.
 
