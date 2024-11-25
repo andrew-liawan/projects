@@ -4,7 +4,7 @@ These are data-related formal studies projects and passion/hobby-related project
 
 ## NHL Dashboard
 
-[Link](NHL.html)
+[Link](https://andrew-liawan.github.io/NHL_Project/)
 
 ## 90s Artists
 
