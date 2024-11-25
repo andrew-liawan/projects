@@ -2,6 +2,10 @@
 
 These are data-related formal studies projects and passion/hobby-related projects. 
 
+## NHL Dashboard
+
+[Link](NHL.html)
+
 ## 90s Artists
 
 ### Description
